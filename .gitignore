@@ -1,0 +1,8 @@
+#BACKEND
+
+!__init__.py
+**.pyc
+**.VS*/**
+**.vs*/**
+**assets/**
+**/assets

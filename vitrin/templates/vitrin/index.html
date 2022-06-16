@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Welcome to django cart!{% endblock title %}
+
+{% block content %}
+    <h1>Welcome to Django cart!</h1>
+    {% if products %}
+        <h2>These are our products:</h2>
+        {% for product in products %}
+
+            <!--Following 6 lines show us how we can link to same url in many ways:-->
+            <a href="{{ product.get_absolute_url }}"><img src={{ product.image.url }} alt="{{ proudct.name }}" width="120" height="100"></a><br><br>
+            <a href="{% url 'shop:product_detail' pk=product.id %}">product link(only pk)</a><br>
+            {% comment "django Detail view only accepts pk or slug field" %}
+                <a href="{% url 'shop:product_detail' name=product.name %}">product link(only name)</a><br>
+            {% endcomment %}
+            <a href="{% url 'shop:product_detail' slug=product.slug %}">product link(slug)</a><br><br><br>
+
+        {% endfor %}
+    {% else %}
+        <h2>There is no products in your website!</h2>
+    {% endif %}
+{% endblock content %}

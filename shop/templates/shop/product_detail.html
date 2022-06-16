@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ product.name }} detail{% endblock title %}
+
+{% block content %}
+    <h1>{% if product.brand %}{{ product.brand }}{% endif %} {{product.name}} details:</h1><br>
+
+    <h2>Name: {{ product.name }}</h2><br>
+    {% if product.brand %}<h2>Brand: {{ product.brand }}</h2><br>{% endif %}
+    <h2>Price: {{ product.price }}</h2><br>
+    {% if product.image %}Image: <img src={{ product.image.url }} alt="{{ proudct.name }}" width="500" height="400">{% endif %}
+    <p>Last updated: {{ product.updated }}</p>
+    
+{% endblock content %}
