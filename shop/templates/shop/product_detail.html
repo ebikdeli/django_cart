@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block head %}
+    <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+{% endblock head %}
+
 {% block title %}{{ product.name }} detail{% endblock title %}
 
 {% block content %}
@@ -10,6 +14,49 @@
     {% if product.brand %}<h2>Brand: {{ product.brand }}</h2><br>{% endif %}
     <h2>Price: {{ product.price }}</h2><br>
     {% if product.image %}Image: <img src={{ product.image.url }} alt="{{ proudct.name }}" width="500" height="400">{% endif %}
-    <p>Last updated: {{ product.updated }}</p>
+    <p>Last updated: {{ product.updated }}</p><br>
+
+    <form action="{% url 'cart:add_to_cart' %}" method="post" id='add_to_cart_form'>
+        {% csrf_token %}
+        <input type="hidden" name="product_id" value="{{ product.id }}">
+        <input type="number" name="numbers" value="{{ product.name }}">
+        <input type="submit" value="Add to cart">
+    </form>
+
+    <div id="result"><h3>سبد خرید را پر کنید</h3></div>
+
+    <br><a href="{% url 'vitrin:index' %}">بازگشت به صفحه اصلی</a>
     
 {% endblock content %}
+
+{% block scripts %}
+<script>
+    // Attach a submit handler to the form
+    $( "#add_to_cart_form" ).submit(function( event ) {
+     
+      // Stop form from submitting normally
+      event.preventDefault();
+     
+      // Get some values from elements on the page:
+      var $form = $( this ),
+        product_id = $form.find("input[name='product_id']").val(),
+        numbers = $form.find("input[name='numbers']").val(),
+        url = $form.attr("action");
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        // const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+     
+      // Send the data using post
+      var posting = $.post( url, {product_id: product_id, numbers: numbers, csrfmiddlewaretoken: csrftoken} );
+     
+      // Put the results in a div
+      posting.done(function( data ) {
+        console.log(data)
+        // var content = $( data ).find( "#content" );
+        var content = $( data );
+        console.log(content)
+        $( "#result" ).empty().append( content[0]['numbers'] );
+      });
+    });
+    </script>
+{% endblock scripts %}
