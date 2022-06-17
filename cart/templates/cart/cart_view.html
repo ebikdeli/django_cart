@@ -1,3 +1,7 @@
+<!--This template and its static files (main.css, main.js) are came from below link:
+  https://codepen.io/justinklemm/pen/kyMjjv
+-->
+
 {% extends 'base.html' %}
 {% load static %}
 
@@ -9,6 +13,8 @@
 {% block title %}{{ request.user.username }} cart{% endblock title %}
 
 {% block content %}
+
+{% if cart.total_items %}
 <h1>Shopping Cart</h1>
 
 <div class="shopping-cart">
@@ -22,45 +28,54 @@
     <label class="product-line-price">Total</label>
   </div>
 
-  <div class="product">
-    <div class="product-image">
-      <img src="https://s.cdpn.io/3/dingo-dog-bones.jpg">
-    </div>
-    <div class="product-details">
-      <div class="product-title">Dingo Dog Bones</div>
-      <p class="product-description">The best dog bones of all time. Holy crap. Your dog will be begging for these things! I got curious once and ate one myself. I'm a fan.</p>
-    </div>
-    <div class="product-price">12.99</div>
-    <div class="product-quantity">
-      <input type="number" value="2" min="1">
-    </div>
-    <div class="product-removal">
-      <button class="remove-product">
-        Remove
-      </button>
-    </div>
-    <div class="product-line-price">25.98</div>
-  </div>
+    {% for product in cart.products.all %}
+      <div class="product">
+        <div class="product-image">
+          <!--<img src="https://s.cdpn.io/3/dingo-dog-bones.jpg">-->
+          <img src="{{product.image.url}}">
+        </div>
+        <div class="product-details">
+          <div class="product-title">{% if product.brand %}{{ product.brand }} {% endif %}{{ product.name }}</div>
+          <!--<p class="product-description">The best dog bones of all time. Holy crap. Your dog will be begging for these things! I got curious once and ate one myself. I'm a fan.</p>-->
+        </div>
+        <div class="product-price">{{ product.price }} تومان</div>
+        <div class="product-quantity">
+          {% for ci in cart.cart_item_cart.all %}
+            {% if ci.product.id == product.id %}
+              <input type="number" value="{{ ci.number }}" min="1" max="5">
+            {% endif %}
+          {% endfor %}
+        </div>
+        <div class="product-removal">
+          <button class="remove-product">
+            حذف از سبد
+          </button>
+        </div>
+        <div class="product-line-price">{{ product.price }} تومان</div>
+      </div>
+    {% endfor %}
 
-  <div class="product">
-    <div class="product-image">
-      <img src="https://s.cdpn.io/3/large-NutroNaturalChoiceAdultLambMealandRiceDryDogFood.png">
+    <!--
+    <div class="product">
+      <div class="product-image">
+        <img src="https://s.cdpn.io/3/large-NutroNaturalChoiceAdultLambMealandRiceDryDogFood.png">
+      </div>
+      <div class="product-details">
+        <div class="product-title">Nutro™ Adult Lamb and Rice Dog Food</div>
+        <p class="product-description">Who doesn't like lamb and rice? We've all hit the halal cart at 3am while quasi-blackout after a night of binge drinking in Manhattan. Now it's your dog's turn!</p>
+      </div>
+      <div class="product-price">45.99</div>
+      <div class="product-quantity">
+        <input type="number" value="1" min="1">
+      </div>
+      <div class="product-removal">
+        <button class="remove-product">
+          Remove
+        </button>
+      </div>
+      <div class="product-line-price">45.99</div>
     </div>
-    <div class="product-details">
-      <div class="product-title">Nutro™ Adult Lamb and Rice Dog Food</div>
-      <p class="product-description">Who doesn't like lamb and rice? We've all hit the halal cart at 3am while quasi-blackout after a night of binge drinking in Manhattan. Now it's your dog's turn!</p>
-    </div>
-    <div class="product-price">45.99</div>
-    <div class="product-quantity">
-      <input type="number" value="1" min="1">
-    </div>
-    <div class="product-removal">
-      <button class="remove-product">
-        Remove
-      </button>
-    </div>
-    <div class="product-line-price">45.99</div>
-  </div>
+    -->
 
   <div class="totals">
     <div class="totals-item">
@@ -84,6 +99,11 @@
       <button class="checkout">Checkout</button>
 
 </div>
+
+{% else %}
+  <h2>سبد خالی است</h2>
+{% endif %}
+
 {% endblock content %}
 
 {% block scripts %}

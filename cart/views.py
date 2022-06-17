@@ -4,6 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView
 
 from .models import Cart
+from shop.models import Product
 
 
 class CartView(LoginRequiredMixin, ListView):
@@ -20,6 +21,32 @@ class CartView(LoginRequiredMixin, ListView):
 
 
 def add_to_cart(request):
-    data = dict(request.POST)
+    if request.method == 'POST':
+        data = dict(request.POST)
+        cart = request.user.cart_user
+        product_id = int(data['product_id'][0])
+        product = Product.objects.get(id=product_id)
+        numbers = int(data['numbers'][0])
 
-    return JsonResponse(data=data, safe=False)
+        # Change cart items and price by new product
+        # cart.products.remove(product)
+        cart.products.add(product)
+        cart.total_items += numbers
+        cart.total_price += numbers * product.price
+        cart.save()
+
+        # Create CartItem for new product or add number and price to the already created CartItem
+        qs = cart.cart_item_cart.filter(product=product)
+        if qs.exists():
+            print('itemcart already exists')
+            ci = qs.last()
+            ci.number = numbers
+            ci.price = numbers * product.price
+            ci.save()
+        else:
+            print('new itemcart created')
+            cart.cart_item_cart.create(product=product, number=numbers, price=numbers * product.price)
+        print(cart.cart_item_cart.all())
+        return JsonResponse(data=data, safe=False)
+
+    return JsonResponse(data={'status': 'NOK'}, safe=False)
