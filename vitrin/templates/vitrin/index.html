@@ -5,6 +5,13 @@
 
 {% block content %}
     <h1>Welcome to Django cart!</h1>
+
+    {% if request.user.is_authenticated %}
+        <br><h2>برای ورود به <a href="{% url 'cart:cart' %}">سبد خرید</a> کلیک کنید</h2><br><br>
+    {% else %}
+        <br><h2>برای ورود به <a href="{% url 'admin:login' %}">حساب کاربری</a> خود کلیک کنید</h2><br><br>
+    {% endif %}
+
     {% if products %}
         <h2>These are our products:</h2>
         {% for product in products %}

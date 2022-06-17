@@ -19,11 +19,12 @@
     <form action="{% url 'cart:add_to_cart' %}" method="post" id='add_to_cart_form'>
         {% csrf_token %}
         <input type="hidden" name="product_id" value="{{ product.id }}">
-        <input type="number" name="numbers" value="{{ product.name }}">
+        <!--<input type="number" name="numbers" value="{{ product.name }}" min="1" max="5" id="numbers">-->
+        <input type="number" name="numbers" value="1" min="1" max="5" id="numbers">
         <input type="submit" value="Add to cart">
-    </form>
+    </form><br><br><br>
 
-    <div id="result"><h3>سبد خرید را پر کنید</h3></div>
+    <div id="result"><h2>سبد خرید را پر کنید</h32></div>
 
     <br><a href="{% url 'vitrin:index' %}">بازگشت به صفحه اصلی</a>
     
@@ -40,7 +41,8 @@
       // Get some values from elements on the page:
       var $form = $( this ),
         product_id = $form.find("input[name='product_id']").val(),
-        numbers = $form.find("input[name='numbers']").val(),
+        // numbers = $form.find("input[name='numbers']").val(),
+        numbers = $("#numbers").val();
         url = $form.attr("action");
         const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
