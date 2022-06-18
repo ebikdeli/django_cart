@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
+from sorl.thumbnail import ImageField
 
 
 class Category(models.Model):
@@ -24,7 +25,8 @@ class Product(models.Model):
     name = models.CharField(max_length=100, unique=True)
     brand = models.CharField(max_length=100, blank=True, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=0)
-    image = models.ImageField(blank=True, null=True)
+    # image = models.ImageField(blank=True, null=True)
+    image = ImageField(blank=True, null=True)
     is_available = models.BooleanField(default=True)
     slug = models.SlugField(blank=True, null=True)
     updated = models.DateTimeField(auto_now=True)

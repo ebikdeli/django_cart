@@ -4,6 +4,7 @@
 
 {% extends 'base.html' %}
 {% load static %}
+{% load cart_filters %}
 
 {% block head %}
     <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
@@ -15,17 +16,17 @@
 {% block content %}
 
 {% if cart.total_items %}
-<h1>Shopping Cart</h1>
+<h1>سبد خرید</h1>
 
 <div class="shopping-cart">
 
   <div class="column-labels">
-    <label class="product-image">Image</label>
-    <label class="product-details">Product</label>
-    <label class="product-price">Price</label>
-    <label class="product-quantity">Quantity</label>
-    <label class="product-removal">Remove</label>
-    <label class="product-line-price">Total</label>
+    <label class="product-image">تصویر</label>
+    <label class="product-details">کالا</label>
+    <label class="product-price">قیمت</label>
+    <label class="product-quantity">تعداد</label>
+    <label class="product-removal">حذف</label>
+    <label class="product-line-price">مجموع</label>
   </div>
 
     {% for product in cart.products.all %}
@@ -38,7 +39,7 @@
           <div class="product-title">{% if product.brand %}{{ product.brand }} {% endif %}{{ product.name }}</div>
           <!--<p class="product-description">The best dog bones of all time. Holy crap. Your dog will be begging for these things! I got curious once and ate one myself. I'm a fan.</p>-->
         </div>
-        <div class="product-price">{{ product.price }} تومان</div>
+        <div class="product-price">{{ product.price }}</div>
         <div class="product-quantity">
           {% for ci in cart.cart_item_cart.all %}
             {% if ci.product.id == product.id %}
@@ -51,7 +52,15 @@
             حذف از سبد
           </button>
         </div>
-        <div class="product-line-price">{{ product.price }} تومان</div>
+
+        {% for ci in cart.cart_item_cart.all %}
+            {% if ci.product.id == product.id %}
+            <!--<h2>{{ci.price}}  {{ci.number}}</h2>-->
+              <div class="product-line-price">{{ product.price|multiple:ci.number }}</div>
+              <!--Or instead of above, we can use this:    <div class="product-line-price">{{ci.price}} تومان</div>-->
+            {% endif %}
+        {% endfor %}
+
       </div>
     {% endfor %}
 
@@ -76,7 +85,36 @@
       <div class="product-line-price">45.99</div>
     </div>
     -->
+  
 
+    <div class="totals">
+      <div class="totals-item">
+        <label>هزینه کالاها</label>
+        <div class="totals-value" id="cart-subtotal">{{ cart.total_price }}</div>
+      </div>
+      <div class="totals-item">
+        <label>پنج درصد مالیات</label>
+        <div class="totals-value" id="cart-tax">{{ cart.total_price|multiple:0.05 }}</div>
+      </div>
+      <div class="totals-item">
+        <label>هزینه ارسال</label>
+        <div class="totals-value" id="cart-shipping">50000</div>
+      </div>
+      <div class="totals-item totals-item-total">
+        <label>کل هزینه</label>
+        {% with tot as cart.total_price %}
+          <div class="totals-value" id="cart-total">{{ tot }}</div>
+        {% endwith %}
+      </div>
+    </div>
+        
+        <button class="checkout">پرداخت</button>
+  
+  </div>
+
+
+
+  <!--
   <div class="totals">
     <div class="totals-item">
       <label>Subtotal</label>
@@ -99,6 +137,7 @@
       <button class="checkout">Checkout</button>
 
 </div>
+-->
 
 {% else %}
   <h2>سبد خالی است</h2>

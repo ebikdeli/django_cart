@@ -3,6 +3,8 @@ var taxRate = 0.05;
 var shippingRate = 15.00; 
 var fadeTime = 300;
 
+const numberFormatter = Intl.NumberFormat('en-US');   // To using thousand separator
+
 
 /* Assign actions */
 $('.product-quantity input').change( function() {
@@ -26,8 +28,12 @@ function recalculateCart()
   
   /* Calculate totals */
   var tax = subtotal * taxRate;
-  var shipping = (subtotal > 0 ? shippingRate : 0);
+  //var shipping = (subtotal > 0 ? shippingRate : 0);  //Override this for greater good!
+  
+  var shipping = Number($( "#cart-shipping" ).text());
+  // console.log(shipping + "    " + typeof(shipping));
   var total = subtotal + tax + shipping;
+  // console.log("tax: " + tax + "   shipping: " + shipping + "   total: " + total);
   
   /* Update totals display */
   $('.totals-value').fadeOut(fadeTime, function() {

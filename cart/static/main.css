@@ -41,7 +41,8 @@
 /* Apply clearfix in a few places */
 /* Apply dollar signs */
  .product .product-price:before, .product .product-line-price:before, .totals-value:before {
-	 content: "$";
+	 /*content: "$";*/
+	 content: "تومان ";
 }
 /* Body/Header stuff */
  body {
@@ -191,7 +192,8 @@
 		 margin-top: 10px;
 	}
 	 .product .product-line-price:before {
-		 content: "Item Total: $";
+		 /*content: "Item Total: $";*/
+		 content: "مجموع کل آیتم ها(تومان): ";
 	}
 	 .totals .totals-item label {
 		 width: 60%;
