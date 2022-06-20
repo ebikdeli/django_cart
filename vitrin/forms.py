@@ -1,11 +1,17 @@
 from django import forms
-from django.contrib.auth.models import User, Group, Permission
+from django.contrib.auth.models import Group, Permission
+from django.contrib.auth import get_user_model
+
+
+class LoginForm(forms.Form):
+    username = forms.CharField()
+    password = forms.CharField(widget=forms.PasswordInput, help_text='simple password')
 
 
 class UserModelForm(forms.ModelForm):
 
     class Meta:
-        model = User
+        model = get_user_model()
         # fields = '__all__'
         fields = ['username', 'email', 'password']
 

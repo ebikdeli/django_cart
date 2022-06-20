@@ -1,11 +1,14 @@
 from django.shortcuts import render
 from django.views.generic.detail import DetailView
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
 from .models import Product
 
 
+# class ProductDetail(PermissionRequiredMixin, DetailView):
 class ProductDetail(DetailView):
     model = Product
+    # permission_required = 'shop.can_go_shopping'
     # queryset = Product.objects.all()
     template_name = 'shop/templates/shop/product_detail.html'
     context_object_name = 'product'

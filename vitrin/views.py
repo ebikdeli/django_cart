@@ -1,18 +1,23 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, HttpResponse, redirect
+from django.urls import reverse
 from django.views.generic.list import ListView
-from django.contrib.auth.models import User, Group, Permission
+from django.contrib.auth.models import Group, Permission
+from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.views.generic import FormView, CreateView
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.forms import formset_factory
 from django.db import IntegrityError
+# from django.contrib.auth.decorators import permission_required
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
 from shop.models import Product
-from .forms import UserModelForm, GroupModelForm, PermissionModelForm
+from .forms import LoginForm, UserModelForm, GroupModelForm, PermissionModelForm
 
 
 # def index(request):
 #     return render(request, 'vitrin/templates/vitrin/index.html')
+
 
 class IndexView(ListView):
     model = Product
@@ -21,15 +26,46 @@ class IndexView(ListView):
     paginate_by: 6
 
 
+def simple_login(request):
+    if request.method == 'POST':
+        login_form = LoginForm(data=request.POST)
+        if login_form.is_valid():
+            user = authenticate(request,
+                                username=login_form.cleaned_data['username'],
+                                password=request.POST.get('password', None))
+            if user:
+                login(request, user)
+                messages.add_message(request, messages.WARNING, f'{user.username} logged in')
+                # print(redirect('vitrin:index'))
+                # print(reverse('vitrin:index'))
+                return redirect('vitrin:index')
+
+            messages.add_message(request, messages.WARNING, 'User could not login')
+
+    else:
+        login_form = LoginForm()
+    return render(request, 'vitrin/templates/vitrin/login_form.html', {'form': login_form})
+
+
+def simple_logout(request):
+    logout(request)
+    messages.add_message(request, messages.SUCCESS, 'User logout from website')
+    # print(reverse('vitrin:index'))
+    # print(redirect('vitrin:index'))
+    return redirect('vitrin:index')
+
+
 class CreateUserView(FormView):
     template_name = 'vitrin/templates/vitrin/create_user.html'
     form_class = UserModelForm
     success_url = reverse_lazy('vitrin:index')
 
     def form_valid(self, form):
-        new_user = form.save()
+        new_user = form.save(commit=False)
+        new_user.set_password(new_user.password)
+        new_user.save()
         # print(new_user.username)
-        print(User.objects.all())
+        print(get_user_model().objects.all())
         messages.add_message(self.request, messages.SUCCESS, f'New user {new_user} created')
         return super().form_valid(form)
 

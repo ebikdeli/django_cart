@@ -19,4 +19,6 @@ user_group_permission_patterns = [
 urlpatterns = [
     path('', views.IndexView.as_view(), name='index'),
     path('create/', include(user_group_permission_patterns)),
+    path('login/', views.simple_login, name='login'),
+    path('logout/', views.simple_logout, name='logout'),
 ]
