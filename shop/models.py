@@ -5,7 +5,7 @@ from sorl.thumbnail import ImageField
 
 
 class Category(models.Model):
-    sub = models.ForeignKey('self', on_delete=models.CASCADE, related_name='sub_category')
+    sub = models.ForeignKey('self', on_delete=models.CASCADE, related_name='sub_category', blank=True, null=True)
     name = models.CharField(max_length=50)
     slug = models.SlugField(blank=True, null=True)
     updated = models.DateTimeField(auto_now=True)

@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}create permission{% endblock title %}
+
+{% block content %}
+    <h1>Create new permission:</h1>
+    <form action="" method="post">
+        {% csrf_token %}
+        <table>
+            {{ form.as_table }}
+        </table>
+        <input type="submit" value="Create permission">
+    </form>
+{% endblock content %}

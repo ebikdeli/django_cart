@@ -5,6 +5,12 @@
 
 {% block content %}
     <h1>Welcome to Django cart!</h1>
+    
+    {% if messages %}
+        {% for m in messages %}
+            <h2>{{ m }}</h2>
+        {% endfor %}
+    {% endif %}
 
     {% if request.user.is_authenticated %}
         <br><h2>برای ورود به <a href="{% url 'cart:cart' %}">سبد خرید</a> کلیک کنید</h2><br><br>
@@ -28,4 +34,7 @@
     {% else %}
         <h2>There is no products in your website!</h2>
     {% endif %}
+    <br><h2><a href="{% url 'vitrin:create_user' %}">Create new user</a></h2><br>
+    <h2><a href="{% url 'vitrin:create_group' %}">Create new group</a></h2><br>
+    <h2><a href="{% url 'vitrin:create_permission' %}">Create new permission</a></h2>
 {% endblock content %}
