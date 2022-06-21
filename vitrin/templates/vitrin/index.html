@@ -5,6 +5,10 @@
 
 {% block content %}
     <h1>Welcome to Django cart!</h1>
+
+    {% if request.user.is_superuser %}
+        <br><h2><a href="{% url 'admin:index' %}">Admin panel</a></h2>
+    {% endif %}
     
     {% if messages %}
         {% for m in messages %}
