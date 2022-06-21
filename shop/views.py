@@ -8,7 +8,7 @@ from .models import Product
 class ProductDetail(PermissionRequiredMixin, DetailView):
 # class ProductDetail(DetailView):
     model = Product
-    permission_required = 'shop.can_go_shopping'
+    permission_required = ('shop.can_go_shopping', 'cart.can_see_cart')
     
     # queryset = Product.objects.all()
     template_name = 'shop/templates/shop/product_detail.html'

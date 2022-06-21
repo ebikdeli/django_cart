@@ -1,16 +1,18 @@
 from django.shortcuts import render
 from django.http import JsonResponse
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.views.generic import ListView
 
 from .models import Cart
 from shop.models import Product
 
 
-class CartView(LoginRequiredMixin, ListView):
+class CartView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+# class CartView(LoginRequiredMixin, ListView):
     template_name = 'cart/templates/cart/cart_view.html'
     model = Cart
     context_object_name = 'cart'
+    permission_required = 'cart.can_see_cart'
 
     def get_queryset(self):
         # print(self.__dict__)

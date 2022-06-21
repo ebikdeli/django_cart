@@ -24,6 +24,14 @@ class IndexView(ListView):
     template_name = 'vitrin/templates/vitrin/index.html'
     context_object_name = 'products'
     paginate_by: 6
+    """
+    def get(self, request, *args, **kwargs) -> HttpResponse:
+        if request.user.is_authenticated:
+            print(request.user.get_all_permissions())
+            print(request.user.get_group_permissions())
+            print(request.user.user_permissions.all())
+        return super().get(request, *args, **kwargs)
+    """
 
 
 def simple_login(request):
